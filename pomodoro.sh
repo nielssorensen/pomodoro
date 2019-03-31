@@ -1,4 +1,4 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 
 # A "cheap" pomodoro timer. It resets itself after the sequence has played.
 

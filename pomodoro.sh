@@ -26,7 +26,7 @@ function osx_check () {
 }
 
 function check_input () {
-    if [[ "$SLEEP_TIME" -gt 0 ]] || [[ "$SLEEP_TIME" =~ ^- ]]
+    if [[ "$SLEEP_TIME" -le 0 ]]
     then
         usage
     fi

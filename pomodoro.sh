@@ -8,6 +8,7 @@ set -e
 SFX_PATH=/System/Library/Sounds/ # Sound effect path for OSX.
 declare -a SEQUENCE
 SEQUENCE=(Hero.aiff Blow.aiff Blow.aiff Blow.aiff Submarine.aiff)
+declare -i SLEEP_TIME
 SLEEP_TIME="$*" #1200 seconds == 20 minutes
 DURATION=0.7 # Length of time a sound should play.
 

@@ -2,6 +2,9 @@
 
 # A "cheap" pomodoro timer. It resets itself after the sequence has played.
 
+set -e
+[[ -z "${DEBUG}" ]] || set -x
+
 SFX_PATH=/System/Library/Sounds/ # Sound effect path for OSX.
 declare -a SEQUENCE
 SEQUENCE=(Hero.aiff Blow.aiff Blow.aiff Blow.aiff Submarine.aiff)

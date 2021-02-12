@@ -7,18 +7,14 @@ set -e
 
 SFX_PATH=/System/Library/Sounds/ # Sound effect path for OSX.
 declare -a SEQUENCE
-INTRO_SEQUENCE=(Ping.aiff Ping.aiff Ping.aiff Glass.aiff)
 SEQUENCE=(Hero.aiff Blow.aiff Blow.aiff Blow.aiff Submarine.aiff)
-declare -i SLEEP_TIME
-SLEEP_TIME="$*" #1200 seconds == 20 minutes
-DURATION=0.7 # Length of time a sound should play.
 
-function usage () {
+usage() {
     echo "usage: $(basename "$0") integer  positive number, in seconds"
     exit 1
 }
 
-function osx_check () {
+osx_check() {
     if [[ "$(uname -s)" != 'Darwin' ]]
     then
         printf "\n==> For use with Mac OS X\n"
@@ -26,46 +22,42 @@ function osx_check () {
     fi
 }
 
-function play_intro() {
-    for i in "${INTRO_SEQUENCE[@]}";
-    do
-        afplay -t "${DURATION}" "${SFX_PATH}/${i}"
-    done
-}
-
-function check_input () {
-    if [[ "$SLEEP_TIME" -le 0 ]]
+check_input() {
+    if [[ "${sleep_time}" -le 0 ]]
     then
         usage
     fi
 }
 
-function play_sequence () {
-    for i in "${SEQUENCE[@]}"; do
-        afplay -t "${DURATION}" "${SFX_PATH}/${i}"
+play_sequence() {
+    for i in "${SEQUENCE[@]}"
+    do
+        afplay -t "${duration}" "${SFX_PATH}${i}"
     done
 }
 
-# TODO: create a counter. this should increment a variable every time the loop runs
-# upon exit, display the number of times the loop ran
-# TODO: IF CTRL-Z was hit, it should record the number of seconds that the script was paused
-# TODO: create a break period end tone
 # TODO: at end of the pomodoro period, ask what was achieved in the period
 # TODO: at the end of the break period, ask what was done to recharge
 # TODO: generate a report of the answers the user provided for historical purposes; output to text file
 
-loop_counter() {
-    :
-}
+main() {
+    local -i  loop_count
+    loop_count=0
+    local -i sleep_time
+    sleep_time="$*" #1200 seconds == 20 minutes
+    local duration=0.7 # Length of time a sound should play.
 
-function main () {
     osx_check
     check_input
-    play_intro
+    echo "Starting at: $(date)"
     while true; do
-        sleep "$SLEEP_TIME";
-        play_sequence
+        sleep "${sleep_time}";
+        echo "Loop ending at: $(date)"
+        play_sequence &
+        loop_count+=1
+        echo "Looped count: ${loop_count}"
+        trap 'printf "\n ==> Pomodoro units: ${loop_count}\n"' SIGHUP SIGINT SIGQUIT SIGTERM
     done
 }
 
-main
+main "$@"

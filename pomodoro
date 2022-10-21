@@ -36,6 +36,16 @@ play_sequence() {
     done
 }
 
+sum_unit_time() {
+    sum_time=$((sleep_time * loop_count))
+}
+
+output_trap() {
+    sum_unit_time
+    echo ""
+    echo "==> Pomodoro units: ${loop_count} (total ${sum_time} seconds)"
+}
+
 # TODO: at end of the pomodoro period, ask what was achieved in the period
 # TODO: at the end of the break period, ask what was done to recharge
 # TODO: generate a report of the answers the user provided for historical purposes; output to text file
@@ -45,6 +55,7 @@ main() {
     loop_count=0
     local -i sleep_time
     sleep_time="$*" #1200 seconds == 20 minutes
+    local -i sum_time
     local duration=0.7 # Length of time a sound should play.
 
     osx_check
@@ -56,7 +67,7 @@ main() {
         play_sequence &
         loop_count+=1
         echo "Looped count: ${loop_count}"
-        trap 'printf "\n ==> Pomodoro units: ${loop_count}\n"' SIGHUP SIGINT SIGQUIT SIGTERM
+        trap 'output_trap' SIGHUP SIGINT SIGQUIT SIGTERM
     done
 }
 
